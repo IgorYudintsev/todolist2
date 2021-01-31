@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
+import {todoApi} from "../api/todolist-api";
 
 export default {
     title: 'API'
@@ -15,7 +16,8 @@ const settings = {
 export const GetTodolists = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        axios.get('https://social-network.samuraijs.com/api/1.1/todo-lists', settings)
+        // axios.get('https://social-network.samuraijs.com/api/1.1/todo-lists', settings)
+        todoApi.getTodos()
             .then((res) => setState(res.data))
     }, [])
 
@@ -25,8 +27,8 @@ export const GetTodolists = () => {
 export const CreateTodolist = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'React'}, settings)
-            .then((res) => {
+        // axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'React'}, settings)
+        todoApi.createTodos().then((res) => {
                 setState(res.data);
             })
     }, [])
@@ -36,9 +38,9 @@ export const CreateTodolist = () => {
 
 export const DeleteTodolist = () => {
     const [state, setState] = useState<any>(null);
-    let todolistID='c496a882-4eda-46d9-86df-1338a355582b';
+    // let todolistID='9b105ec2-5aa5-4edd-a0ee-31d8e505f6c2';
     useEffect(() => {
-        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistID}`,  settings)
+        todoApi.DeleteTodos()
             .then((res) => {
                 setState(res.data);
             })
@@ -49,9 +51,9 @@ export const DeleteTodolist = () => {
 
 export const UpdateTodolistTitle = () => {
     const [state, setState] = useState<any>(null);
-    let todolistID='555e0458-b266-411d-95c8-aa539c95eb01';
+    // let todolistID='555e0458-b266-411d-95c8-aa539c95eb01';
     useEffect(() => {
-        axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistID}`, {title: 'Redux'}, settings)
+        todoApi.UpdateTodos()
             .then((res) => {
                 setState(res.data);
             })
