@@ -1,4 +1,5 @@
 import axios from "axios";
+import {TaskType} from "../Todolist";
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -8,14 +9,12 @@ const instance = axios.create({
     }
 })
 
-
-type TodoType = {
+export type TodoType = {
     id: string,
     title: string,
     addedDate: string,
     order: number
 }
-
 //
 // type CreateResponseType={
 //     resultCode: number,
@@ -44,17 +43,15 @@ type CommonResponseType<T = {}> = {
     fieldsErrors: Array<string>
     data: T
 }
-
 type GetTasksResponse = {
-    Items: getTaskType[]
+    items: getTaskType[]
     totalCount: number
     error: string | null
 }
-type getTaskType = {
+export type getTaskType = {
     description: string
     title: string
-    completed: boolean
-    status: number
+    status: any
     priority: number
     startDate: string
     deadline: string
@@ -62,12 +59,12 @@ type getTaskType = {
     todoListId: string
     order: number
     addedDate: string
+    isDone: boolean
 }
-
 export type UpdateTaskType = {
     title: string
     description: string
-    status: number
+    status: number|boolean
     priority: number
     startDate: string
     deadline: string
@@ -76,11 +73,11 @@ export type UpdateTaskType = {
 let todolistIDtoDelete = '9b105ec2-5aa5-4edd-a0ee-31d8e505f6c2';
 let todolistIDtoUpdate = 'c831a55a-10f0-4258-87a0-b21b55e7404b';
 let todolistID = '71c79d5c-ecee-48dd-8554-93b740193420';
-let taskID='e0a9f176-9e53-41e7-8fe5-bd0e851ad24f'
+let taskID = 'e0a9f176-9e53-41e7-8fe5-bd0e851ad24f'
 
 export const todoApi = {
     getTodos() {
-        return instance.get<TodoType>('todo-lists');
+        return instance.get<TodoType[]>('todo-lists');
     },
     createTodos<TodoType>() {
         //                                      передаем Т
@@ -94,16 +91,16 @@ export const todoApi = {
         //                                      передаем Т
         return instance.put<CommonResponseType>(`todo-lists/${todolistIDtoUpdate}`, {title: 'Redux'})
     },
-    getTasks() {
-        return instance.get<GetTasksResponse>(`todo-lists/${todolistID}/tasks`);
+    getTasks(todolistId: string) {
+        return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`);
     },
-    createNewTask() {
+    createNewTask(todolistId: string, taskTitile: string) {
         //                                      передаем Т
-        return instance.post(`todo-lists/${todolistID}/tasks`, {title: 'React'})
+        return instance.post<CommonResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks`, {title: taskTitile})
     },
-    UpdateTask() {
+    UpdateTask(todolistId: string, taskId: string, model: UpdateTaskType) {
         //                                      передаем Т
-        return instance.put<CommonResponseType>(`todo-lists/${todolistID}/tasks/${taskID}`, {title: 'SASHA'})
+        return instance.put<CommonResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`, {title: 'SASHA'})
     },
     DeleteTasks() {
         //                                      передаем Т
