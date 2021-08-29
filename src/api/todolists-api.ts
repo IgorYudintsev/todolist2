@@ -1,11 +1,14 @@
 import axios from 'axios'
 
-const instance = axios.create({
-    baseURL: 'https://social-network.samuraijs.com/api/1.1/',
+const settings = {
     withCredentials: true,
     headers: {
-        'API-KEY': '0e5dc50f-7e9f-4eda-9157-a63c5026aaad2'
+        'API-KEY': '0e5dc50f-7e9f-4eda-9157-a63c5026aaad'
     }
+}
+const instance = axios.create({
+    baseURL: 'https://social-network.samuraijs.com/api/1.1/',
+    ...settings
 })
 
 // api
@@ -33,38 +36,34 @@ export const todolistsAPI = {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`);
     },
     createTask(todolistId: string, taskTitile: string) {
-        return instance.post<ResponseType<{ item: TaskType }>>(`todo-lists/${todolistId}/tasks`, {title: taskTitile});
+        return instance.post<ResponseType<{ item: TaskType}>>(`todo-lists/${todolistId}/tasks`, {title: taskTitile});
     },
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
         return instance.put<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks/${taskId}`, model);
     }
 }
-//для логинизации
+
+
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
 export const authAPI = {
-    login(data:LoginParamsType) {
-        return instance.post<ResponseType<{userId:number}>>(`/auth/login`, data);
+    login(data: LoginParamsType) {
+        const promise = instance.post<ResponseType<{userId?: number}>>('auth/login', data);
+        return promise;
+    },
+    logout() {
+        const promise = instance.delete<ResponseType<{userId?: number}>>('auth/login');
+        return promise;
     },
     me() {
-        return instance.get<ResponseType<MeParamsType>>(`/auth/me`);
-    },
-    logout(){
-        return instance.delete<ResponseType>(`/auth/login`);
+       const promise =  instance.get<ResponseType<{id: number; email: string; login: string}>>('auth/me');
+       return promise
     }
-
-}
-
-export  type MeParamsType={
-    id: number,
-    email: string,
-    login: string
-}
-
-// types for login
-export type LoginParamsType={
-    email: string,
-    password: string,
-    rememberMe?: boolean,
-    captcha?:string
 }
 
 // types
@@ -79,14 +78,12 @@ export type ResponseType<D = {}> = {
     messages: Array<string>
     data: D
 }
-
 export enum TaskStatuses {
     New = 0,
     InProgress = 1,
     Completed = 2,
     Draft = 3
 }
-
 export enum TaskPriorities {
     Low = 0,
     Middle = 1,
@@ -94,7 +91,6 @@ export enum TaskPriorities {
     Urgently = 3,
     Later = 4
 }
-
 export type TaskType = {
     description: string
     title: string

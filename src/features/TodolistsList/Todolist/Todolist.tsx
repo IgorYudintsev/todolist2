@@ -6,10 +6,8 @@ import {Delete} from '@material-ui/icons'
 import {Task} from './Task/Task'
 import {TaskStatuses, TaskType} from '../../../api/todolists-api'
 import {FilterValuesType, TodolistDomainType} from '../todolists-reducer'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {fetchTasksTC} from '../tasks-reducer'
-import {AppRootStateType} from "../../../app/store";
-import {Redirect} from "react-router-dom";
 
 type PropsType = {
     todolist: TodolistDomainType
@@ -26,6 +24,7 @@ type PropsType = {
 
 export const Todolist = React.memo(function ({demo = false, ...props}: PropsType) {
     console.log('Todolist called')
+
     const dispatch = useDispatch()
     useEffect(() => {
         if (demo) {
@@ -59,7 +58,6 @@ export const Todolist = React.memo(function ({demo = false, ...props}: PropsType
     if (props.todolist.filter === 'completed') {
         tasksForTodolist = props.tasks.filter(t => t.status === TaskStatuses.Completed)
     }
-
 
     return <div>
         <h3><EditableSpan value={props.todolist.title} onChange={changeTodolistTitle}/>
