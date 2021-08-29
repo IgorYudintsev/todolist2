@@ -24,7 +24,7 @@ const slice = createSlice({
             }
         },
         addTodolistAC(state, action: PayloadAction<{ todolist: TodolistType }>) {
-         return   state = [{...action.payload.todolist, filter: 'all', entityStatus: 'idle'}, ...state]
+            return state = [{...action.payload.todolist, filter: 'all', entityStatus: 'idle'}, ...state]
         },
         changeTodolistTitleAC(state, action: PayloadAction<{ id: string, title: string }>) {
             const index = state.findIndex(f => f.id === action.payload.id);
@@ -43,10 +43,10 @@ const slice = createSlice({
             // state.map(tl => tl.id === action.payload.id ? {...tl, entityStatus: action.payload.status} : tl)
         },
         setTodolistsAC(state, action: PayloadAction<{ todolists: Array<TodolistType> }>) {
-        return action.payload.todolists.map(tl => ({...tl, filter: 'all', entityStatus: 'idle'}))
+            return action.payload.todolists.map(tl => ({...tl, filter: 'all', entityStatus: 'idle'}))
             //без return не зафиксируются изменения стейта
         },
-    }
+    },
 })
 
 export const todolistsReducer = slice.reducer
@@ -123,7 +123,7 @@ export type TodolistDomainType = TodolistType & {
     entityStatus: RequestStatusType
 }
 
-type ThunkDispatch = Dispatch<SetAppStatusActionType| SetAppErrorActionType >
+type ThunkDispatch = Dispatch<SetAppStatusActionType | SetAppErrorActionType>
 
 //===================================================================================
 // import {todolistsAPI, TodolistType} from '../../api/todolists-api'
